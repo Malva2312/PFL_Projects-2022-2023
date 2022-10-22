@@ -28,7 +28,7 @@ normalize (x:xs) = [Mono (vars x) new_coef] ++ (normalize [y | y <- xs, (vars x 
 
 norm :: [Mono] -> [Mono]
 norm [] = []
-norm ms = normalize (sort (map orderMono ms))
+norm ms = clean (normalize (sort (map orderMono ms)))
 
 addiction :: [Mono] -> [Mono] -> [Mono]
 addiction x y = norm (x ++ y)
@@ -73,6 +73,36 @@ mult [] y  = []
 mult x  [] = []
 mult x  y  = normalize (multiplyPoly x y)
 
+findIdx :: String -> [Var] -> Int -> Int
+findIdx s [] idx = (-1)
+findIdx s (v:vs) idx
+    | s == var v = idx
+    | otherwise = findIdx s vs (idx+1)
+
+deriveMono :: String -> Mono -> Mono
+deriveMono v m 
+    | (vars m) == [] =  Mono [] 0
+    | (idx == (-1))  =  Mono [] 0
+    | otherwise      =  orderMono ( 
+        Mono (
+                [y | y <- (vars m),  (var y /= v)] ++ [Var v ((expoent ((vars m)!!idx)) - 1)]
+            ) 
+            (
+                (coef m) * (expoent ((vars m )!!idx) )
+            )
+    )
+    where idx = findIdx v (vars m) 0 
+
+derivePoly :: String -> [Mono] -> [Mono]
+derivePoly v [] = []
+derivePoly v (p:ps) = [deriveMono v p] ++ derivePoly v ps
+
+derive :: String -> [Mono] -> [Mono]
+derive v [] = []
+derive v p = norm  (derivePoly v p)
+
+
+
 a = Mono [Var "x" 3] 3
 b = Mono [Var "y" 2] 6
 c = Mono [Var "z" 5] 2
@@ -93,3 +123,11 @@ z0 = Var "z" 0
 z1 = Var "z" 1
 z2 = Var "z" 2
 z3 = Var "z" 3
+
+
+mono1 = [ 
+    (Mono [(Var "x" 2)] 0),
+    (Mono [(Var "y" 1)] 2),
+    (Mono [(Var "z" 1)] 5),
+    (Mono [(Var "y" 1)] 1),
+    (Mono [(Var "y" 2)] 7)]
