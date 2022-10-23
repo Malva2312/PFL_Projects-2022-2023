@@ -1,5 +1,5 @@
 import Data.List
-
+import Data.List.Split
 
 data Var = Var { 
     var :: String, 
@@ -11,7 +11,6 @@ data Mono = Mono {
     coef :: Integer
 } deriving (Eq,Ord, Show)
 
--- let x = Mono (sort (vars x)) (coef x)
 orderMono :: Mono -> Mono
 orderMono x =  Mono (sort (vars x)) (coef x)
 
@@ -71,7 +70,7 @@ mult :: [Mono] -> [Mono] -> [Mono]
 mult [] [] = []
 mult [] y  = []
 mult x  [] = []
-mult x  y  = normalize (multiplyPoly x y)
+mult x  y  = norm (multiplyPoly x y)
 
 findIdx :: String -> [Var] -> Int -> Int
 findIdx s [] idx = (-1)
@@ -102,6 +101,51 @@ derive v [] = []
 derive v p = norm  (derivePoly v p)
 
 
+showVars :: Mono -> String
+showVars m  
+    | vars m == [] = ""
+    | length (vars m) == 1 = var ((vars m)!!0) ++ s
+    | otherwise = var ((vars m)!!0)  ++ s  ++ "*"++ showVars (Mono [y | y <- (vars m), (var y /= var ((vars m)!!0)) ] (coef m))
+    where s = if (expoent ((vars m)!!0) == 1) then "" else ("^" ++ show (expoent ((vars m)!!0)))
+
+outPutMono :: Mono -> String
+outPutMono m = s  ++ (showVars m)
+    where s = if (coef m /= 1) then (show (abs (coef m)) ++ "*") else ""
+
+outPutPoly :: [Mono] -> String
+outPutPoly [] = ""
+outPutPoly (x:xs) 
+    | length xs > 0 = (outPutMono x) ++ signal ++ (outPutPoly xs)
+    | otherwise = (outPutMono x)
+    where signal = if (coef (head xs) >= 0) then " + " else " - "
+
+getExpression :: String -> String
+getExpression [] = []
+getExpression (x:xs) = s ++ getExpression xs
+    where s = if (x == '-') then "+-" else ( if ( x == ' ') then "" else [x])
+
+-- splitOn '+' -> splitOn '*' -> splitOn '^' -> 
+
+getVar :: [String] -> Var
+getVar x 
+    | (length x > 1) = Var (head x) (read (last x) :: Integer)
+    | (length x == 1) = Var (head x) 1 
+
+getSingleMono :: String -> Mono
+--getSingleMono [] = Mono [] 1
+getSingleMono x 
+    | (x!!0 == '-') = if (x!!1 >= '0' && x!!1 <= '9' ) then (Mono [] (read x ::Integer)) else Mono [getVar (splitOn "^" (tail x))] (-1)
+    | otherwise     = if (x!!0 >= '0' && x!!0 <= '9')  then (Mono [] (read x ::Integer)) else Mono [getVar (splitOn "^" x)] 1
+
+
+getMono :: [String] -> Mono
+getMono [] = Mono [] 1 
+getMono (x:xs) = multiplyMono (getSingleMono x) (getMono xs) 
+
+
+getInput :: String -> [Mono]
+getInput [] = []
+getInput x = map getMono (map (splitOn "*" ) (splitOn "+" (getExpression x))) -- remove '+'
 
 a = Mono [Var "x" 3] 3
 b = Mono [Var "y" 2] 6
@@ -125,9 +169,9 @@ z2 = Var "z" 2
 z3 = Var "z" 3
 
 
-mono1 = [ 
+poly1 = [ 
     (Mono [(Var "x" 2)] 0),
     (Mono [(Var "y" 1)] 2),
     (Mono [(Var "z" 1)] 5),
     (Mono [(Var "y" 1)] 1),
-    (Mono [(Var "y" 2)] 7)]
+    (Mono [(Var "y" 2)] (-7))]
