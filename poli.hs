@@ -1,83 +1,91 @@
 import Data.List
 import Data.List.Split
 
+
+{- Var represents a variable that is composed of a name ("x", "y", ...) and an integer exponent -}
 data Var = Var { 
     var :: String, 
     expoent :: Integer
 } deriving (Eq,Ord, Show)
 
+{- Mono represents a monomial that is composed of a list of variables ([Var]) and an integer coefficient -}
 data Mono = Mono { 
     vars :: [Var],
     coef :: Integer
 } deriving (Eq,Ord, Show)
 
+{- Sort the variables present in the received monomial and return it -}
 orderMono :: Mono -> Mono
 orderMono x =  Mono (sort (vars x)) (coef x)
 
-equalVars :: Mono -> Mono -> Bool
-equalVars x y = (vars x == vars y)
+{- Joins monomials with the same variables returning a list of simplified monomials -}
+joinMono :: [Mono] -> [Mono]
+joinMono [] = []
+joinMono (x:xs) = [Mono (vars x) new_coef] ++ (joinMono [y | y <- xs, (vars x /= vars y)])
+    where new_coef = sum (map coef [y | y <- (x:xs), (vars x == vars y)] ) 
 
-notEqualVars :: Mono -> Mono -> Bool
-notEqualVars x y = not (equalVars x y)
-
+{- Returns a polynomial (list of monomials) in normal form -}
 normalize :: [Mono] -> [Mono]
 normalize [] = []
-normalize (x:xs) = [Mono (vars x) new_coef] ++ (normalize [y | y <- xs, (vars x /= vars y)])
-    where new_coef = sum (map coef [y | y <- (x:xs), (vars x == vars y)] ) --  [coef y | y <- (x:xs), (vars x == vars y)] )   
+normalize ms = clean (joinMono (sort (map orderMono ms)))
 
-norm :: [Mono] -> [Mono]
-norm [] = []
-norm ms = clean (normalize (sort (map orderMono ms)))
-
+{- Returns a polynomial in normal form resulting from the sum of the polynomials given as input -}
 addiction :: [Mono] -> [Mono] -> [Mono]
-addiction x y = norm (x ++ y)
+addiction x y = normalize (x ++ y)
 
+{- Return a monomial multiplied by -1 -}
 negMultiply :: Mono -> Mono
 negMultiply x = Mono (vars x) ((coef x) * (-1))
 
+{- Returns a polynomial in normal form resulting from the subtraction of the polynomials given as input -}
 subtraction :: [Mono] -> [Mono] -> [Mono]
-subtraction x y = norm (x ++ (map negMultiply y))
+subtraction x y = normalize (x ++ (map negMultiply y))
 
+{- Remove the monomials that have coefficient 0 -}
 clean :: [Mono] -> [Mono]
 clean [] = []
 clean x = [y | y <- x, ((coef y) /= 0 )]
 
+{- Add the exponents of the variables that are equal -}
 addVars :: [Var] -> [Var] -> [Var]
 addVars [] [] = []
 addVars [] y = y
 addVars x [] = x
 addVars (x:xs) (y:ys) = [Var (var x) (sum (map expoent ([z | z <- (x:xs), (var z == var x)] ++ [z | z <- (y:ys), (var z == var x)]))) ] ++ (addVars [z | z <- (x:xs), (var z /= var x)] [z | z <- (y:ys), (var z /= var x)])
 
-
+{- Apply multiplication between 2 monomials -}
 multiplyMono :: Mono -> Mono -> Mono
 multiplyMono x y = Mono (addVars (vars x) (vars y)) ((coef x) * (coef y) )
 
+{- Apply multiplication between 1 monomial and 1 polynomial -}
+multMP :: Mono -> [Mono] -> [Mono]
+multMP x [] = []
+multMP x (y:ys) 
+    | (coef x == 0) = [] ++ (multMP x ys)
+    | otherwise = [multiplyMono x y] ++ (multMP x ys)
 
-multiply :: Mono -> [Mono] -> [Mono]
-multiply x [] = []
-multiply x (y:ys) 
-    | (coef x == 0) = [] ++ (multiply x ys)
-    | otherwise = [multiplyMono x y] ++ (multiply x ys)
-
-
+{- Apply multiplication between 2 polynomials -}
 multiplyPoly :: [Mono] -> [Mono] -> [Mono]
 multiplyPoly [] [] = []
 multiplyPoly [] y  = []
 multiplyPoly x  [] = []
-multiplyPoly (x:xs) y = (multiply x y) ++ (multiplyPoly xs y)
+multiplyPoly (x:xs) y = (multMP x y) ++ (multiplyPoly xs y)
 
+{- Returns, in normal form, the multiplication between 2 polynomials -}
 mult :: [Mono] -> [Mono] -> [Mono]
 mult [] [] = []
 mult [] y  = []
 mult x  [] = []
-mult x  y  = norm (multiplyPoly x y)
+mult x  y  = normalize (multiplyPoly x y)
 
+{- Returns the list index of the variable being derived -}
 findIdx :: String -> [Var] -> Int -> Int
 findIdx s [] idx = (-1)
 findIdx s (v:vs) idx
     | s == var v = idx
     | otherwise = findIdx s vs (idx+1)
 
+{- Derive a monomial as a function of the received variables ( f(x) = -3*x^2  then f'(x) = -3*2*x   ) -}
 deriveMono :: String -> Mono -> Mono
 deriveMono v m 
     | (vars m) == [] =  Mono [] 0
@@ -92,15 +100,17 @@ deriveMono v m
     )
     where idx = findIdx v (vars m) 0 
 
+{- Derive a polynomial as a function of the received variables -}
 derivePoly :: String -> [Mono] -> [Mono]
 derivePoly v [] = []
 derivePoly v (p:ps) = [deriveMono v p] ++ derivePoly v ps
 
+{- Retorna, na forma normal, a derivação de um polinomio em função de uma variável -}
 derive :: String -> [Mono] -> [Mono]
 derive v [] = []
-derive v p = norm  (derivePoly v p)
+derive v p = normalize  (derivePoly v p)
 
-
+{- Returns a string with the data of the variables of a monomial -}
 showVars :: Mono -> String
 showVars m  
     | vars m == [] = ""
@@ -108,10 +118,12 @@ showVars m
     | otherwise = var ((vars m)!!0)  ++ s  ++ "*"++ showVars (Mono [y | y <- (vars m), (var y /= var ((vars m)!!0)) ] (coef m))
     where s = if (expoent ((vars m)!!0) == 1) then "" else ("^" ++ show (expoent ((vars m)!!0)))
 
+{- Returns a string with the monomial data -}
 outPutMono :: Mono -> String
 outPutMono m = s  ++ (showVars m)
     where s = if (coef m /= 1) then (show (abs (coef m)) ++ "*") else ""
 
+{- Returns a string with the arrangement of the polynomial-}
 outPutPoly :: [Mono] -> String
 outPutPoly [] = ""
 outPutPoly (x:xs) 
@@ -119,59 +131,32 @@ outPutPoly (x:xs)
     | otherwise = (outPutMono x)
     where signal = if (coef (head xs) >= 0) then " + " else " - "
 
+{- Remove spaces and replaces  '-' with "+-"-}
 getExpression :: String -> String
 getExpression [] = []
 getExpression (x:xs) = s ++ getExpression xs
     where s = if (x == '-') then "+-" else ( if ( x == ' ') then "" else [x])
 
--- splitOn '+' -> splitOn '*' -> splitOn '^' -> 
-
+{- Read a Var from a string exp: ["x", "2"] -> Var "x" 2
+if the exponent does not exist in the list then the variable is assumed to be raised to 1 -}
 getVar :: [String] -> Var
 getVar x 
-    | (length x > 1) = Var (head x) (read (last x) :: Integer)
-    | (length x == 1) = Var (head x) 1 
+    | (length x > 1) = Var (head x) (read (last x) :: Integer) 
+    | (length x == 1) = Var (head x) 1
 
+{- Receives a string and returns a monomial with a variable or just a coefficient -}
 getSingleMono :: String -> Mono
---getSingleMono [] = Mono [] 1
 getSingleMono x 
     | (x!!0 == '-') = if (x!!1 >= '0' && x!!1 <= '9' ) then (Mono [] (read x ::Integer)) else Mono [getVar (splitOn "^" (tail x))] (-1)
     | otherwise     = if (x!!0 >= '0' && x!!0 <= '9')  then (Mono [] (read x ::Integer)) else Mono [getVar (splitOn "^" x)] 1
 
-
+{- Joins monomial through multiplication to form the monomial indicated by the string -}
 getMono :: [String] -> Mono
 getMono [] = Mono [] 1 
 getMono (x:xs) = multiplyMono (getSingleMono x) (getMono xs) 
 
-
+{- Splits the string into pieces and returns a list with the monomials calculated from the resulting string list -}
 getInput :: String -> [Mono]
 getInput [] = []
-getInput x = map getMono (map (splitOn "*" ) (splitOn "+" (getExpression x))) -- remove '+'
+getInput x = map getMono (map (splitOn "*" ) (splitOn "+" (getExpression x)))
 
-a = Mono [Var "x" 3] 3
-b = Mono [Var "y" 2] 6
-c = Mono [Var "z" 5] 2
-d = Mono [Var "x" 5] 9
-n = Mono [Var "y" 2] 5
-
-x0 = Var "x" 0
-x1 = Var "x" 1
-x2 = Var "x" 2
-x3 = Var "x" 3
-
-y0 = Var "y" 0 
-y1 = Var "y" 1
-y2 = Var "y" 2
-y3 = Var "y" 3
-
-z0 = Var "z" 0 
-z1 = Var "z" 1
-z2 = Var "z" 2
-z3 = Var "z" 3
-
-
-poly1 = [ 
-    (Mono [(Var "x" 2)] 0),
-    (Mono [(Var "y" 1)] 2),
-    (Mono [(Var "z" 1)] 5),
-    (Mono [(Var "y" 1)] 1),
-    (Mono [(Var "y" 2)] (-7))]
