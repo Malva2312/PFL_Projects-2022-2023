@@ -2,6 +2,8 @@ import Data.List
 import Data.List.Split
 
 
+--Data Types
+
 {- Var represents a variable that is composed of a name ("x", "y", ...) and an integer exponent -}
 data Var = Var { 
     var :: String, 
@@ -13,6 +15,13 @@ data Mono = Mono {
     vars :: [Var],
     coef :: Integer
 } deriving (Eq,Ord, Show)
+
+--Normalization
+
+{- Remove the monomials that have coefficient 0 -}
+clean :: [Mono] -> [Mono]
+clean [] = []
+clean x = [y | y <- x, ((coef y) /= 0 )]
 
 {- Sort the variables present in the received monomial and return it -}
 orderMono :: Mono -> Mono
@@ -39,6 +48,9 @@ normalize :: [Mono] -> [Mono]
 normalize [] = []
 normalize ms = sortBy higherDegree (clean (joinMono (sort (map orderMono ms))))
 
+
+--Addiction
+
 {- Returns a polynomial in normal form resulting from the sum of the polynomials given as input -}
 add :: [Mono] -> [Mono] -> [Mono]
 add x y = normalize (x ++ y)
@@ -51,10 +63,8 @@ negMultiply x = Mono (vars x) ((coef x) * (-1))
 subtraction :: [Mono] -> [Mono] -> [Mono]
 subtraction x y = normalize (x ++ (map negMultiply y))
 
-{- Remove the monomials that have coefficient 0 -}
-clean :: [Mono] -> [Mono]
-clean [] = []
-clean x = [y | y <- x, ((coef y) /= 0 )]
+
+--Multiplication
 
 {- Add the exponents of the variables that are equal -}
 addVars :: [Var] -> [Var] -> [Var]
@@ -88,6 +98,9 @@ mult [] y  = []
 mult x  [] = []
 mult x  y  = normalize (multiplyPoly x y)
 
+
+--Derivation
+
 {- Returns the list index of the variable being derived -}
 findIdx :: String -> [Var] -> Int -> Int
 findIdx s [] idx = (-1)
@@ -119,6 +132,9 @@ derivePoly v (p:ps) = [deriveMono v p] ++ derivePoly v ps
 derive :: String -> [Mono] -> [Mono]
 derive v [] = []
 derive v p = normalize  (derivePoly v p)
+
+
+--String Inputs & Outputs
 
 {- Returns a string with the data of the variables of a monomial -}
 showVars :: Mono -> String
@@ -168,7 +184,10 @@ getMono (x:xs) = multiplyMono (getSingleMono x) (getMono xs)
 {- Splits the string into pieces and returns a list with the monomials calculated from the resulting string list -}
 getInput :: String -> [Mono]
 getInput [] = []
-getInput x = map getMono (map (splitOn "*" ) (splitOn "+" (getExpression x)))
+getInput x = map getMono (map (splitOn "*" ) (filter (/="")(splitOn "+" (getExpression x))))
+
+
+--Principal Fucntions 
 
 {- Takes a polynomial in a string and returns it in its normal form -}
 normalization :: String -> String 
