@@ -12,7 +12,7 @@ A nossa representação passou por criar um novo data type chamado "Mono", que r
 
 ## Polinómio para String:
 - Inicialmente foi feito um split nos "+" e os "-" ficam representados como "+-" e os espaços são posteriormente retirados.
-- De seguida, é apresentada a representação final em forma de string como se pode ver nos exemplos e testando o programa.+
+- De seguida, é apresentada a representação final em forma de string como se pode ver nos exemplos e testando o programa.
 
 **Turma 12, grupo 4**<br />
 João Malva, up202006605<br />
