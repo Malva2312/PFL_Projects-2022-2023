@@ -130,7 +130,7 @@ derivePoly :: String -> [Mono] -> [Mono]
 derivePoly v [] = []
 derivePoly v (p:ps) = [deriveMono v p] ++ derivePoly v ps
 
-{- Retorna, na forma normal, a derivação de um polinomio em função de uma variável -}
+{- Retorna, na forma normal, a  de um polinomio em função de uma variável -}
 derive :: String -> [Mono] -> [Mono]
 derive v [] = []
 derive v p = normalize  (derivePoly v p)
@@ -213,3 +213,4 @@ derivation :: String -> String -> String
 derivation [] x  = []
 derivation v  [] = []
 derivation v  x  = outPutPoly (derive v (getInput x))
+
