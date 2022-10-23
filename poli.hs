@@ -30,8 +30,8 @@ normalize [] = []
 normalize ms = clean (joinMono (sort (map orderMono ms)))
 
 {- Returns a polynomial in normal form resulting from the sum of the polynomials given as input -}
-addiction :: [Mono] -> [Mono] -> [Mono]
-addiction x y = normalize (x ++ y)
+add :: [Mono] -> [Mono] -> [Mono]
+add x y = normalize (x ++ y)
 
 {- Return a monomial multiplied by -1 -}
 negMultiply :: Mono -> Mono
@@ -159,4 +159,27 @@ getMono (x:xs) = multiplyMono (getSingleMono x) (getMono xs)
 getInput :: String -> [Mono]
 getInput [] = []
 getInput x = map getMono (map (splitOn "*" ) (splitOn "+" (getExpression x)))
+
+{- Takes a polynomial in a string and returns it in its normal form -}
+normalization :: String -> String 
+normalization [] = []
+normalization x  = outPutPoly (normalize (getInput x) )
+
+{- Takes two polynomials in a string and returns their multiplication -}
+multiplication :: String -> String -> String
+multiplication [] y = []
+multiplication x [] = []
+multiplication x y = outPutPoly (mult (getInput x) (getInput y))
+
+{- Takes two polynomials in a string and returns their addiction -}
+addiction :: String -> String -> String
+addiction x [] = x
+addiction [] y = y
+addiction x y = outPutPoly (add (getInput x) (getInput y))
+
+{- Receives a variable and a string polynomial and returns the derivation of the polynomial by the variable -}
+derivation :: String -> String -> String
+derivation [] x  = []
+derivation v  [] = []
+derivation v  x  = outPutPoly (derive v (getInput x))
 
