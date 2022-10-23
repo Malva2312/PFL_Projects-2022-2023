@@ -20,10 +20,14 @@ data Mono = Mono {
 
 --Normalization
 
+{- Deletes variables whose exponent is 0 -}
+assert :: Mono -> Mono
+assert m = Mono [y | y <- (vars m), (expoent y /= 0)] (coef m)
+
 {- Remove the monomials that have coefficient 0 -}
 clean :: [Mono] -> [Mono]
 clean [] = []
-clean x = [y | y <- x, ((coef y) /= 0 )]
+clean x = map assert [y | y <- x, ((coef y) /= 0 )]
 
 {- Sort the variables present in the received monomial and return it -}
 orderMono :: Mono -> Mono
@@ -149,15 +153,19 @@ showVars m
 {- Returns a string with the monomial data -}
 outPutMono :: Mono -> String
 outPutMono m = s  ++ (showVars m)
-    where s = if (coef m /= 1) then (show (abs (coef m)) ++ "*") else ""
+    where 
+        mul = if (vars m /= []) then "*" else ""
+        s = if (abs (coef m) /= 1) then ( show (abs (coef m)) ++ mul) else (if (vars m == []) then "1" else "")
 
 {- Returns a string with the arrangement of the polynomial-}
 outPutPoly :: [Mono] -> String
 outPutPoly [] = ""
-outPutPoly (x:xs) 
-    | length xs > 0 = (outPutMono x) ++ signal ++ (outPutPoly xs)
-    | otherwise = (outPutMono x)
-    where signal = if (coef (head xs) >= 0) then " + " else " - "
+outPutPoly (x:xs) = minum ++  (outPutMono x) ++ plus ++ (outPutPoly xs)
+    where
+        minum = if (coef x < 0) then " - " else ""
+        plus = if (length xs > 0)
+            then (if (coef (head xs) >= 0) then " + " else "")
+            else ""
 
 {- Remove spaces and replaces  '-' with "+-"-}
 getExpression :: String -> String
