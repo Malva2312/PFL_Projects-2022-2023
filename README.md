@@ -8,7 +8,7 @@ A nossa representação passou por criar dois novos data types chamados "Var" e 
 - Exemplo: ( Var "x" 2 ) representa x^2
 - Um monomio tem em si contido [Var] que representam as suas variáveis.
 
-## Um "Mono" é constituído por 3 parâmetros:
+## Um "Mono" é constituído por 2 parâmetros:
 - Exemplo: Mono 
 - O primeiro parâmetro corresponde às variáveis (Var). Ex:[Var "x" 2, Var "y" 3] -> x^2 * y^3
 - O segundo parâmetro corresponde ao valor (inteiro) pelo qual as variáveis são multiplicadas. Corresponde ao coeficiente.
