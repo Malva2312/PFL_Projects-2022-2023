@@ -24,10 +24,20 @@ joinMono [] = []
 joinMono (x:xs) = [Mono (vars x) new_coef] ++ (joinMono [y | y <- xs, (vars x /= vars y)])
     where new_coef = sum (map coef [y | y <- (x:xs), (vars x == vars y)] ) 
 
+{- Returns the degree of the monomial -}
+degree :: Mono -> Integer
+degree x = sum (map expoent (vars x))
+
+{- Auxiliar function to order with the monomial degree -}
+higherDegree :: Mono -> Mono -> Ordering
+higherDegree x y 
+    | degree x >= degree y = LT
+    | degree x < degree y = GT
+
 {- Returns a polynomial (list of monomials) in normal form -}
 normalize :: [Mono] -> [Mono]
 normalize [] = []
-normalize ms = clean (joinMono (sort (map orderMono ms)))
+normalize ms = sortBy higherDegree (clean (joinMono (sort (map orderMono ms))))
 
 {- Returns a polynomial in normal form resulting from the sum of the polynomials given as input -}
 add :: [Mono] -> [Mono] -> [Mono]
@@ -182,4 +192,3 @@ derivation :: String -> String -> String
 derivation [] x  = []
 derivation v  [] = []
 derivation v  x  = outPutPoly (derive v (getInput x))
-
