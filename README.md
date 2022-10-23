@@ -15,21 +15,21 @@ A nossa representação passou por criar dois novos data types chamados "Var" e 
 
 ## Leitura de String:
 - Ao receber a string todos os "-" são substituidos por "+-" e todos os espaços (" ") são removidos.
-- De seguida, foi feito um split nos "+" obtendo todas as parcelas que correspondem ao polinomio.
+- De seguida, foi feito um split nos "+" obtendo todas as parcelas que correspondem ao polinómio.
 - Transformando as parcelas em monomios obtém-se uma lista de monomios (polinimio) pelo qual é possivel realizar as operações.
-- Após a realização da operação o resultado é apresentado de volta em string, construido a string monomio a monomio. 
+- Após a realização da operação o resultado é apresentado de volta em string, construido a string monómio a monómio. 
 
 ## Inputs
-- As multiplicações têm que estar esplícitas com 'x', exp: 2*x*y
-- As variáveis quando elevadas a um número diferente de 1 têm que usar o caratér '^', exp: x^3
+- As multiplicações têm que estar explícitas com 'x', ex: 2*x*y
+- As variáveis quando elevadas a um número diferente de 1 têm que usar o caratér '^', ex: x^3
 - As parcelas têm que estar dívididas com '+' ou '-'
 - Não admite a utilização de '(' e ')'
-- Exp: 2*x^3*y +5*z -3*y +1
+- Ex: 2*x^3*y +5*z -3*y +1
  
 ## Funcionalidades
-- Normalização: são somados os monomios cujas variáveis sejam iguais e são eliminados monomios com coeficente 0, são apresentados pela ordem de grau.
-- Soma: soma dois polinomios, somando os monomios com variáveis iguais e apresenta o resultado na forma normal.
-- Multiplicação: realiza multiplicações entre um monomio e um polinomio1 por cada monomio presente num polinomio2. O resultado é apresentado na forma normal.
+- Normalização: são somados os monómios cujas variáveis sejam iguais e são eliminados monómios com coeficente 0, são apresentados pela ordem de grau.
+- Soma: soma dois polinómios, somando os monómios com variáveis iguais e apresenta o resultado na forma normal.
+- Multiplicação: realiza multiplicações entre um monómio e um polinomio1 por cada monómio presente num polinomio2. O resultado é apresentado na forma normal.
 - Derivação: realiza a derivação em função de apenas uma variável e apresenta o resultado na forma normal.
 
 ## Chamada a funções
