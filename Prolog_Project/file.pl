@@ -116,11 +116,9 @@ replace_in_board([ Head | Tail], Row, Col, NewVal, [ Head | Rest ]):-
 
 
 /* update board values */
-update_board(Board, Pos_y, Pos_x, Stone, NewBoard):-
+update_board(Y, X):-
+    board(Board),
     stone_value(Stone), 
-    % get_position(Pos_x, Pos_y),
-    X is Pos_x - 1,
-    Y is Pos_y - 1, 
     replace_in_board(Board, Y, X, Stone, NewBoard),
     retract(board(B)),
     asserta(board(NewBoard)).
@@ -146,8 +144,6 @@ print_board :-
 main :-
     load_players,
     load_board, 
-    board(Board),
-    
-    print_table(Board).
+    print_board.
 
 
