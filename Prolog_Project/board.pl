@@ -1,20 +1,7 @@
+:- use_module(library(lists)).
+
 stone_value('X').
 free_space('O').
-
-/*
-start_board(
-    [
-        ['O','O','O','O','O','O','O','O','O'],
-        ['O','O','O','O','O','O','O','O','O'],
-        ['O','O','O','O','O','O','O','O','O'],
-        ['O','O','O','O','O','O','O','O','O'],
-        ['O','O','O','O','O','O','O','O','O'],
-        ['O','O','O','O','O','O','O','O','O'],
-        ['O','O','O','O','O','O','O','O','O'],
-        ['O','O','O','O','O','O','O','O','O'],
-        ['O','O','O','O','O','O','O','O','O']
-    ]
-).*/
 
 % create_row(+SizeRow, +Element, -List)
 create_row(0, _, []) :- !.
@@ -42,20 +29,102 @@ load_board(SideSize) :-
 
     retractall(board( _ )),
     assert(board(Board)).
-    
+
+
+% between(+N, +Min, +Max)
+between(N, Min, Max) :-
+    N >= Min,
+    N =< Max.
+
+%
+board_bounds(X, Y) :-
+    board(Board),
+    length(Board, Len),
+
+    between(X, 1, Len),
+    between(Y, 1, Len).
+
 %
 spot_available(X, Y) :-
+    board_bounds(X, Y),
+
     board(Board),
     free_space(FreeSpot),
-    
 
-    
+    nth1(Y, Board, Row),
+    nth1(X, Row, Element),
+
+    Element == FreeSpot.
+
+%
+change_value(X, Y, Elem, Matrix, NewMatrix) :-
+
+    nth1(Y, Matrix, Row, Rest),
+    nth1(X, Row, _ , RowRest),
+
+    nth1(X, NewRow, Elem, RowRest),
+    nth1(Y, NewMatrix, NewRow , Rest).
+
 %
 add_stone(X, Y) :-
+    spot_available(X, Y),
+
     board(Board),
-    length(Board, Len), 
+    stone_value(Stone), 
+    
+    change_value(X, Y, Stone, Board, NewBoard),
+    retract(board(Board)),
+    assert(board(NewBoard)).
+    
+%
+row_full([]).
+row_full([X | Rest]) :-
+    stone_value(Stone),
+    X == Stone,
+    row_full(Rest).
 
-    X >= 0, Y >= 0,
-    X < Len, Y < Len,
+%
+full([]).
+full([Row | Rest]) :-
+    row_full(Row),
+    full(Rest).
 
+%
+board_full :-
+    board(Board),
+    full(Board).
 
+%
+count_x(List, X, Count) :-
+    count_x(List, X, 0, Count).
+%
+count_x([], _, Acc, Acc).
+count_x([H|T], X, Acc, Count) :-
+    (   
+        H = X ->  Acc1 is Acc + 1;
+            Acc1 is Acc
+    ),
+    count_x(T, X, Acc1, Count).
+
+select_col( _, [], [] ).
+select_col(X, [MatrixHead | MatrixTail], [Head | Tail]) :-
+    nth1(X, MatrixHead, Head),
+    select_col(X, MatrixTail, Tail). 
+
+%
+stones_horizontal(Y, N_Stone) :-
+    board(Board),
+    stone_value(Stone),
+
+    nth1(Y, Board, Row),
+    count_x(Row, Stone, N_Stone).
+    
+%
+stones_vertical(X, N_Stone) :- 
+    board(Board),
+    stone_value(Stone),
+
+    select_col(X, Board, Col),
+    count_x(Col, Stone, N_Stone).
+
+    
