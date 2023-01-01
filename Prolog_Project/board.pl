@@ -106,6 +106,21 @@ count_x([H|T], X, Acc, Count) :-
     ),
     count_x(T, X, Acc1, Count).
 
+
+%
+diagonal_1(SideLen, _ , _ , SideLen, []) :- !.
+diagonal_1( _ , SideLen , _ , SideLen, []) :- !.
+diagonal_1(X, Y, Matrix, SideLen, [Elem | Tail]) :-
+
+    nth0(Y, Matrix, Row),
+    nth0(X, Row, Elem),
+
+    X1 is X + 1, Y1 is Y + 1,
+
+    diagonal_1(X1, Y1, Matrix, SideLen, Tail).
+
+
+%
 select_col( _, [], [] ).
 select_col(X, [MatrixHead | MatrixTail], [Head | Tail]) :-
     nth1(X, MatrixHead, Head),
@@ -127,4 +142,31 @@ stones_vertical(X, N_Stone) :-
     select_col(X, Board, Col),
     count_x(Col, Stone, N_Stone).
 
-    
+%
+stones_diagonal_1(X,Y,  N_Stone) :-
+    board(Board),
+    length(Board, Len),
+    stone_value(Stone),
+
+    (
+        X < Y -> 
+            (X1 is X - X, Y1 is Y - X);
+            (X1 is X - Y, Y1 is Y - Y)
+    ), 
+
+    diagonal_1(X1, Y1, Board, Len, D1),
+
+    count_x(D1, Stone, N_Stone).
+
+
+stones_diagonal_2(X, N_Stone) :-
+    board(Board),
+    length(Board, Len),
+    stone_value(Stone),
+
+
+    (
+        Len - (X - 1)  < Y ->
+            (X1 is Len, Y1 = Y - (Len - X));
+            (X1 is )
+    )
