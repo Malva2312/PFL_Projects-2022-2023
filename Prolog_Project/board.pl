@@ -37,8 +37,7 @@ between(N, Min, Max) :-
     N =< Max.
 
 %
-board_bounds(X, Y) :-
-    board(Board),
+board_bounds(X, Y, Board) :-
     length(Board, Len),
 
     between(X, 1, Len),
@@ -46,10 +45,10 @@ board_bounds(X, Y) :-
 
 %
 spot_available(X, Y) :-
-    board_bounds(X, Y),
-
     board(Board),
     free_space(FreeSpot),
+
+    board_bounds(X, Y, Board),
 
     nth1(Y, Board, Row),
     nth1(X, Row, Element),
@@ -108,17 +107,89 @@ count_x([H|T], X, Acc, Count) :-
 
 
 %
-diagonal_1(SideLen, _ , _ , SideLen, []) :- !.
-diagonal_1( _ , SideLen , _ , SideLen, []) :- !.
-diagonal_1(X, Y, Matrix, SideLen, [Elem | Tail]) :-
-
-    nth0(Y, Matrix, Row),
-    nth0(X, Row, Elem),
+diagonal_1_down( X, Y, Matrix, D1) :-
+    length(Matrix, Len),
+    diagonal_1_down(X, Y, Matrix, Len, D1).
+%
+diagonal_1_down( _ , Len , _ , Len, []) :- !.
+diagonal_1_down( Len , _ , _ , Len, []) :- !.
+diagonal_1_down( X , Y , Matrix, Len, [Elem | Tail]) :-
 
     X1 is X + 1, Y1 is Y + 1,
 
-    diagonal_1(X1, Y1, Matrix, SideLen, Tail).
+    nth1(Y1, Matrix, Row),
+    nth1(X1, Row, Elem),
+    
+    diagonal_1_down(X1, Y1, Matrix, Len, Tail).
 
+%
+diagonal_1_up( 0 , _ , _ , []) :- !.
+diagonal_1_up( _ , 0 , _ , []) :- !.
+diagonal_1_up(X, Y, Matrix , [Elem | Tail]) :-
+
+    nth1(Y, Matrix, Row),
+    nth1(X, Row, Elem),
+
+    X1 is X - 1, Y1 is Y - 1,
+
+    diagonal_1_up(X1, Y1, Matrix, Tail).
+
+%
+diagonal_1(X, Y, Matrix, D1):-
+
+    board_bounds(X, Y, Matrix),
+
+    diagonal_1_up(X, Y, Matrix, Reverese_UP),
+    diagonal_1_down(X, Y, Matrix, DOWN),
+
+    reverse(UP, Reverese_UP),
+    append(UP, DOWN, D1).
+
+
+%
+diagonal_2_down(X, Y, Matrix, D_DOWN) :-
+    length(Matrix, Len),
+    diagonal_2_down(X, Y, Matrix, Len, D_DOWN).
+%
+diagonal_2_down( _ , Len , _ , Len, []) :- !.
+diagonal_2_down( 1 , Y , Matrix, Len, []):- !.
+diagonal_2_down(X , Y, Matrix, Len, [Elem | Tail]) :-
+    X1 is X -1, Y1 is Y + 1,
+
+    nth1(Y1, Matrix, Row),
+    nth1(X1, Row, Elem),
+
+    diagonal_2_down(X1, Y1, Matrix, Len, Tail).
+
+%
+diagonal_2_up(X, Y, Matrix, D_UP) :-
+    length(Matrix, Len),
+    diagonal_2_up(X , Y, Matrix, Len, D_UP).
+%
+diagonal_2_up( _ , 0 , _ ,  _ , []) :- !.
+diagonal_2_up(Len, Y , Matrix , Len, [Elem]) :- 
+    nth1(Y, Matrix, Row),
+    nth1(Len, Row, Elem), 
+    !.
+diagonal_2_up( X , Y , Matrix , Len, [Elem | Tail]) :-
+
+    nth1(Y, Matrix, Row),
+    nth1(X, Row, Elem),
+
+    X1 is X + 1, Y1 is Y - 1,
+
+    diagonal_2_up(X1, Y1, Matrix, Len, Tail).
+
+%
+diagonal_2(X, Y, Matrix, D2):-
+
+    board_bounds(X, Y, Matrix),
+
+    diagonal_2_up(X, Y, Matrix, Reverese_UP),
+    diagonal_2_down(X, Y, Matrix, DOWN),
+
+    reverse(UP, Reverese_UP),
+    append(UP, DOWN, D2).
 
 %
 select_col( _, [], [] ).
@@ -145,28 +216,17 @@ stones_vertical(X, N_Stone) :-
 %
 stones_diagonal_1(X,Y,  N_Stone) :-
     board(Board),
-    length(Board, Len),
     stone_value(Stone),
 
-    (
-        X < Y -> 
-            (X1 is X - X, Y1 is Y - X);
-            (X1 is X - Y, Y1 is Y - Y)
-    ), 
-
-    diagonal_1(X1, Y1, Board, Len, D1),
+    diagonal_1(X, Y, Board, D1),
 
     count_x(D1, Stone, N_Stone).
 
-
-stones_diagonal_2(X, N_Stone) :-
+%
+stones_diagonal_2(X, Y, N_Stone) :-
     board(Board),
-    length(Board, Len),
-    stone_value(Stone),
+    stone_value(Stone), 
 
+    diagonal_2(X, Y, Board, D2),
 
-    (
-        Len - (X - 1)  < Y ->
-            (X1 is Len, Y1 = Y - (Len - X));
-            (X1 is )
-    )
+    count_x(D2, Stone, N_Stone).
