@@ -1,8 +1,8 @@
 # Turma 12 - 369_6
 
 ## Intervenientes
-- [João Antónito Maricato Malva](up202006605@fe.up.pt) - up202006605
-- [João Tomás Marques Félix](up202008867@fe.up.pt) - up202008867
+- João Antónito Maricato Malva - up202006605
+- João Tomás Marques Félix - up202008867
 - Contribuição 50/50
 
 ## Instalação e Execução
