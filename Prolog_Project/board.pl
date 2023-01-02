@@ -6,7 +6,18 @@
 board_size(9).
 
 stone_value('X').
-free_space('_').
+free_space('X').
+
+%
+change_board_size :-
+    board_size(Old),
+    (   Old == 9
+    ->  New is 6
+    ;   New is 9),
+
+    retractall(board_size( _ )),
+    assert(board_size(New)).
+
 
 % create_row(+SizeRow, +Element, -List)
 create_row(0, _, []) :- !.
@@ -29,7 +40,9 @@ new_board(SideSize, Board) :-
     create_board(SideSize, SideSize, FreeSpot, Board).
 
 %
-load_board(SideSize) :-
+load_board :-
+
+    board_size(SideSize),
     new_board(SideSize, Board),
 
     retractall(board( _ )),

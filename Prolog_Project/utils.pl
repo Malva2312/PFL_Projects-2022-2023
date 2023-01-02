@@ -10,7 +10,7 @@ points(InARow, Points) :-
 
 %
 how_many_points(N_Vertical, N_Horizontal, N_Diagonal1, N_Diagonal2, Total_Points) :-
-
+    
     points(N_Vertical, V),
     points(N_Horizontal, H),
     points(N_Diagonal1, D1),
@@ -37,3 +37,4 @@ range_(Int, End, Step, L, Acc) :-
     ->  range_(Next, End, Step, L, [Int|Acc])
     ;   L = [Int|Acc]
     ).
+
