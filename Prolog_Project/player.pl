@@ -1,3 +1,5 @@
+:- dynamic player/2.
+
 player_1(1).
 player_2(2).
 start_points(0).
