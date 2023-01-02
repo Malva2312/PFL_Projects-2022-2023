@@ -21,3 +21,7 @@
 ## Lógica do jogo
 
 ## Conclusões
+
+## Bibliografia
+
+- https://www.di.fc.ul.pt/~jpn/gv/369.htm
