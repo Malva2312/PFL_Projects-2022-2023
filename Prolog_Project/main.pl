@@ -98,7 +98,7 @@ rules_handler(Choice) :-
     ).
 
 
-%
+% move(+Player, +X, +Y)
 move(Player, X, Y) :-
     add_stone(X, Y),
     stones_total(X, Y, V, H, D1, D2),

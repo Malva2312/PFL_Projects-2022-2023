@@ -34,7 +34,7 @@ create_board(Height, Width, Element, [Row | Tail]) :-
     create_row(Width, Element, Row),
     create_board(NewHeight, Width, Element, Tail).
 
-%
+% new_board(+SideSize, -Board)
 new_board(SideSize, Board) :-
     free_space(FreeSpot),
     create_board(SideSize, SideSize, FreeSpot, Board).
@@ -48,7 +48,7 @@ load_board :-
     retractall(board( _ )),
     assert(board(Board)).
 
-%
+% spot_available(+X, +Y)
 spot_available(X, Y) :-
     board(Board),
     free_space(FreeSpot),
@@ -60,7 +60,7 @@ spot_available(X, Y) :-
 
     Element == FreeSpot.
 
-%
+% add_stone(+X, +Y)
 add_stone(X, Y) :-
     spot_available(X, Y),
 
@@ -71,28 +71,29 @@ add_stone(X, Y) :-
     retract(board(Board)),
     assert(board(NewBoard)).
     
-%
+% row_full(-X)
 row_full([]).
 row_full([X | Rest]) :-
     stone_value(Stone),
     X == Stone,
     row_full(Rest).
 
-%
+% full(-X)
 full([]).
 full([Row | Rest]) :-
     row_full(Row),
     full(Rest).
 
-%
+
 board_full :-
     board(Board),
     full(Board).
 
-%
+% count_x (+List, +X, -Count)
 count_x(List, X, Count) :-
     count_x(List, X, 0, Count).
-%
+
+% count_x (+List, +X, +Acc, -Count)
 count_x([], _, Acc, Acc).
 count_x([H|T], X, Acc, Count) :-
     (   
@@ -101,7 +102,7 @@ count_x([H|T], X, Acc, Count) :-
     ),
     count_x(T, X, Acc1, Count).
 
-%
+% stones_horizontal(+Y, -N_Stone)
 stones_horizontal(Y, N_Stone) :-
     board(Board),
     stone_value(Stone),
@@ -109,7 +110,7 @@ stones_horizontal(Y, N_Stone) :-
     nth1(Y, Board, Row),
     count_x(Row, Stone, N_Stone).
     
-%
+% stones_vertical(+X, -N_Stone)
 stones_vertical(X, N_Stone) :- 
     board(Board),
     stone_value(Stone),
@@ -117,7 +118,7 @@ stones_vertical(X, N_Stone) :-
     select_col(X, Board, Col),
     count_x(Col, Stone, N_Stone).
 
-%
+% stones_diagonal_1(+X, +Y, -N_Stone)
 stones_diagonal_1(X,Y,  N_Stone) :-
     board(Board),
     stone_value(Stone),
@@ -125,13 +126,14 @@ stones_diagonal_1(X,Y,  N_Stone) :-
     diagonal_1(X, Y, Board, D1),
     count_x(D1, Stone, N_Stone).
 
-%
+% stones_diagonal_2(+X, +Y, -N_Stone)
 stones_diagonal_2(X, Y, N_Stone) :-
     board(Board),
     stone_value(Stone), 
 
     diagonal_2(X, Y, Board, D2),
     count_x(D2, Stone, N_Stone).
+
 
 stones_total(X, Y, V, H, D1, D2) :-
     stones_vertical(X, V),

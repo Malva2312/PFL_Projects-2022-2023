@@ -8,7 +8,7 @@ cpu('Random').
 
 start_points(0).
 
-%
+% load_player(+Player)
 load_player(Player):-
     start_points(Points),
     assertz(player(Player, Points)).
@@ -21,7 +21,7 @@ load_players(P1, P2) :-
     load_player(P2).
 
 
-%
+% add_points(+Player, +Points)
 add_points(Player, Points) :-
 
     player(Player, Old),
