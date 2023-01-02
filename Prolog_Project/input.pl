@@ -1,6 +1,6 @@
 :- include('utils.pl').
 
-%
+% read_integer(?X, +Min, +Max, +Request)
 read_integer(X, Min, Max, Request) :-
     repeat,
         write(Request),
@@ -13,7 +13,7 @@ read_integer(X, Min, Max, Request) :-
             fail
         ).
 
-%
+% read_coords(-X, -Y, +Min, +Max)
 read_coords(X, Y, Min, Max) :-
     
     read_integer(X, Min, Max, '\tChose Colomn\n'),

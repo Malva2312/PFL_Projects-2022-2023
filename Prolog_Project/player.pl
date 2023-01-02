@@ -5,12 +5,13 @@ player_2(2).
 start_points(0).
 
 
-%
+% load_player(+Player)
 load_player(Player):-
     start_points(Points),
     assert(player(Player, Points)).
 
-%
+% load_players is true if all players have been successfully loaded into the game.
+% Any existing players are removed from the database before loading the new players.
 load_players :-
     retractall(player( _ , _ )),
 
@@ -21,7 +22,7 @@ load_players :-
     load_player(P2).
 
 
-%
+% add_points(+Player, +Points)
 add_points(Player, Points) :-
 
     player(Player, Old),
