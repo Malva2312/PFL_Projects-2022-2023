@@ -16,7 +16,7 @@ read_integer(X, Min, Max, Request) :-
 %
 read_coords(X, Y, Min, Max) :-
     
-    read_integer(X, Min, Max, 'Chose Colomn\n'),
-    read_integer(Y, Min, Max, '\nChose Row\n'), 
+    read_integer(X, Min, Max, '\tChose Colomn\n'),
+    read_integer(Y, Min, Max, '\tChose Row\n'), 
 
     format('\nColomn : ~d\tRow : ~d\n', [X, Y]).

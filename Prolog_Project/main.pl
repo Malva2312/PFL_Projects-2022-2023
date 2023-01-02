@@ -3,10 +3,7 @@
 :- include('input.pl').
 :- include('display.pl').
 
-:- dynamic board_size/1.
-
-board_size(2).
-
+%:- dynamic state/1.
 
 
 
@@ -28,15 +25,15 @@ player_action(Player, Size) :-
             fail
         ).
 %
-print_board :-
+print_game :-
     board(B),
-    print_table(B).
+    player_1(P1),
+    player_2(P2),
+    
+    player(P1, Points1),
+    player(P2, Points2),
+    print_all(P1, P2, Points1, Points2, B).
 
-/*%
-win_condition :-
-    board(B),
-    full(B).
-*/
 %
 game :-
     board_size(Size),
@@ -46,39 +43,24 @@ game :-
     player_1(P1),
     player_2(P2),
 
-    print_board,
+    print_game,
 
     repeat, 
 
         player_action(P1, Size),
+        print_game,
 
-        %display
-
-        %print_board,
-
-        %player_action(P2, Size),
-
-        %display
-        print_board,
+        player_action(P2, Size),
+        print_game,
 
         (   board_full
-        ->  write('\nWorked\n'),
+        ->  player(P1, P1_Points),
+            player(P2, P2_Points),
+            display_winner(P1, P1_Points, P2, P2_Points),
             !, true
-        ;   write('Failed'), fail
+        ;   true
         ).
 
-
-
-        %jogador 1 joga
-            %receber input
-        
-            %ver se o input é valido
-            %ver se se pode colocar no tabuleiro
-            %colocar no tabuleiro
-
-        %jogador 2 joga
-
-        %verificar se o tabuleiro está cheio
 
 
 

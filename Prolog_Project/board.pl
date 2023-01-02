@@ -1,9 +1,12 @@
 :- include('matrix.pl').
 
 :- dynamic board/1.
+:- dynamic board_size/1.
+
+board_size(9).
 
 stone_value('X').
-free_space('O').
+free_space('_').
 
 % create_row(+SizeRow, +Element, -List)
 create_row(0, _, []) :- !.

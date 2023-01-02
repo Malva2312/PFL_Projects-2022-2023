@@ -17,3 +17,23 @@ how_many_points(N_Vertical, N_Horizontal, N_Diagonal1, N_Diagonal2, Total_Points
     points(N_Diagonal2, D2),
 
     Total_Points is V + H + D1 + D2.
+
+%
+range(Start, End, Step, L) :-
+    integer(Start),
+    integer(End),
+    integer(Step),
+    Step > 0,
+
+    (   End - Start > 0
+    ->  S1 is Step
+    ;   S1 is Step * (-1)
+    ),
+    range_(Start, End, S1, L, []).
+    
+range_(Int, End, Step, L, Acc) :-
+    Next is Int + Step, 
+    (   Next =< End
+    ->  range_(Next, End, Step, L, [Int|Acc])
+    ;   L = [Int|Acc]
+    ).
