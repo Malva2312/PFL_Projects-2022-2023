@@ -25,3 +25,4 @@
 ## Bibliografia
 
 - https://www.di.fc.ul.pt/~jpn/gv/369.htm
+- https://boardgamegeek.com/boardgame/32597/369
