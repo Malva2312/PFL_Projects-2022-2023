@@ -98,3 +98,4 @@ display_settings(Size, CPU) :-
    format('1 -> Change Board (6x6 or 9x9)\t\t\tBoard\t:\t~dx~d\n', [Size, Size]),
    format('2 -> Change CPU Tatics (Random or Smart)\tCPU\t:\t~w\n', [CPU]),
    write('0 -> Return'), nl.
+

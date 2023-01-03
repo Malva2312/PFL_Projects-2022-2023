@@ -19,6 +19,7 @@ settings_options(0, 2).
 request('Choose Option\n').
 
 
+% This predicate displays the main menu of the game and handles user input. The menu consists of a list of options and a prompt for the user to enter their choice. The users choice is then passed to the menu_handler predicate for further processing.
 menu :-
     display_menu,
     menu_options(Min, Max),
@@ -26,6 +27,7 @@ menu :-
     read_integer(Choice, Min, Max, Request), nl,
     menu_handler(Choice).
 
+% This predicate displays the game menu and handles user input. The menu consists of a list of options and a prompt for the user to enter their choice. The users choice is then passed to the game_menu_handler predicate for further processing.
 game_menu :-
     display_game_menu,
     game_menu_options(Min, Max),
@@ -33,6 +35,7 @@ game_menu :-
     read_integer(Choice, Min, Max, Request), nl,
     game_menu_handler(Choice).
 
+% This predicate displays the current settings and handles user input. The settings consist of the board size and the CPU player setting. The user is presented with a list of options and a prompt to enter their choice. The users choice is then passed to the settings_handler predicate for further processing.
 settings :-
     board_size(Size),
     cpu(CPU),
@@ -42,6 +45,7 @@ settings :-
     read_integer(Choice, Min, Max, Request), nl,
     settings_handler(Choice).
 
+% This predicate displays the rules of the game and handles user input. The rules consist of the board size and the rules for winning the game. The user is presented with a list of options and a prompt to enter their choice. The users choice is then passed to the rules_handler predicate for further processing.
 rules :-
     board_size(Size),
     display_rules(Size),
@@ -57,7 +61,7 @@ move(Player, X, Y) :-
     how_many_points(V, H, D1, D2, Points),
     add_points(Player, Points).
 
-%
+% This predicate displays the current state of the game. The game state includes the board, the players, and their scores.
 display_game :-
     board(B),
     
@@ -69,6 +73,7 @@ display_game :-
     display_game_board(P1, P2, Points1, Points2, B).
 
 
+% This predicate switches the current player and the next player.
 switch_turn :-
 
     who_turn(P1),
@@ -87,12 +92,15 @@ choose_move(Player, X, Y, Size) :-
     ;   cpu_move(X, Y)
     ).
     
+
+% This predicate represents a players turn in the game. The players turn consists of making a move on the game board and switching to the next player.
 turn :-
     who_turn(Player), 
     board_size(Size),
     repeat,
         choose_move(Player, X, Y, Size),
         
+        % Check if the spot is available and make the move if it is. Otherwise, display an error message and try again.
         (   spot_available(X, Y)
         ->  move(Player, X, Y),
             !, true
@@ -108,12 +116,14 @@ turn :-
     ;   switch_turn).
 
 
+% This predicate starts the game. The game consists of loading the board, loading the players, displaying the game board, and switching to the turn state.
 game(P1, P2) :- 
     load_board, 
     load_players(P1, P2),
 
     display_game, 
 
+    % Set the first player as the current player and the second player as the next player.
     retractall(who_turn( _ )),
     assert(who_turn(P1)),
 
@@ -149,7 +159,7 @@ game_over(Winner) :-
 
 exit :- !.
 
-%
+% This predicate plays the game. The game consists of switching to the initial state and repeating the following block until the exit state is reached. The block consists of retrieving the current state, calling the current state, and either continuing or exiting the game depending on the current state.
 play :-
     initial_state(StartState),
     change_state(StartState), 
