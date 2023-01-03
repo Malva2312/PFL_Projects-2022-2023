@@ -12,7 +12,9 @@ load_player(Player):-
     start_points(Points),
     assertz(player(Player, Points)).
 
-%
+% The load_players predicate loads the players P1 and P2 into the program.
+% It first removes any previously loaded players using the retractall/1 predicate,
+% then loads each player using the load_player predicate.
 load_players(P1, P2) :-
     retractall(player( _ , _ )),
 
@@ -47,7 +49,9 @@ change_cpu :-
     % Retract the current CPU player type and assert the new CPU player type.
     retractall(cpu(_)),
     assert(cpu(New)).
-%
+% The random_approach predicate selects a random valid move for the CPU player
+% from the list of valid moves stored in the VALID_MOVES variable.
+% The selected move is output using the format predicate.
 random_approach(X, Y, VALID_MOVES):-
     random_member([X, Y], VALID_MOVES),
     format('\n\n\n\tCPU CHOICE\nColomn : ~d\tRow : ~d\n', [X, Y]).

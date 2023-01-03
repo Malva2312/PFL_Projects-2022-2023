@@ -84,7 +84,9 @@ switch_turn :-
 
     assert(who_turn(P2)),
     assert(next_turn(P1)).
-    
+
+% The cpu_move predicate selects a random valid move for the CPU player. 
+% A valid move is one that satisfies the valid_move predicate.
 cpu_move(X, Y) :-
     setof([X, Y], valid_move(X, Y), VALIDE_MOVES),
     random_approach(X, Y, VALIDE_MOVES).
