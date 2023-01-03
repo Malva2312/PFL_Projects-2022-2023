@@ -29,7 +29,9 @@ add_points(Player, Points) :-
     retract(player(Player, _ )),
     assert(player(Player, New)).
 
+% This predicate retrieves the number of points for a given player.
 value(Player, Points):-
+    % Retrieve the number of points for the given player.
     player(Player, Points).
 
 % This predicate changes the type of the CPU player.

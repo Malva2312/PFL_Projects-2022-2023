@@ -141,23 +141,37 @@ stones_diagonal_2(X, Y, N_Stone) :-
     diagonal_2(X, Y, Board, D2),
     count_x(D2, Stone, N_Stone).
 
-%
+% This predicate counts the total number of stones in a given position
 stones_total(X, Y, V, H, D1, D2) :-
+    % Count the number of stones in the vertical row containing the position.
     stones_vertical(X, V),
+    % Count the number of stones in the horizontal row containing the position.
     stones_horizontal(Y, H),
+    % Count the number of stones in the first diagonal containing the position.
     stones_diagonal_1(X, Y, D1),
+    % Count the number of stones in the second diagonal containing the position.
     stones_diagonal_2(X, Y, D2).
 
+% This predicate generates a list of pairs from two lists of elements.
 list_pairs(List1, Pairs) :-
+    % Find all pairs of elements from the two lists using a combination of member and findall.
     findall((X,Y), (member(X, List1), member(Y, List1)), Pairs).
 
+% This predicate adds a list of valid moves to the database.
 add_valid_move([]).
 add_valid_move([(X, Y) | Tail]) :-
+    % Add a valid move to the database using assert
     assert(valid_move(X, Y)),
+    % Add the rest of the valid moves to the database.
     add_valid_move(Tail).
 
+% This predicate adds all valid moves to the database for a given board size.
 add_valid_moves(Size) :-
+    % Remove all valid moves from the database using retractall
     retractall(valid_move(_, _)),
+    % Generate a list of integers from 1 to Size using range
     range(1, Size, 1, L1),
+    % Generate a list of pairs of coordinates using list_pairs
     list_pairs(L1, Coordinates),
+    % Add the list of valid moves to the database using add_valid_move
     add_valid_move(Coordinates).

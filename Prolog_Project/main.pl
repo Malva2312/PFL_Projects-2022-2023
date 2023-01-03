@@ -84,15 +84,18 @@ switch_turn :-
 
     assert(who_turn(P2)),
     assert(next_turn(P1)).
-
+    
 cpu_move(X, Y) :-
     setof([X, Y], valid_move(X, Y), VALIDE_MOVES),
     random_approach(X, Y, VALIDE_MOVES).
 
+% This predicate prompts the user for a move or selects a move for the CPU.
 choose_move(Player, X, Y, Size) :-
     (   integer(Player)
+    % If Player is an integer, prompt the user for a move using read_coords
     ->  format('\n\tPlayer ~d\n', [Player]),
         read_coords(X, Y, 1, Size)
+        % If Player is 'CPU', select a move for the CPU using cpu_move
     ;   cpu_move(X, Y)
     ).
     
@@ -135,29 +138,33 @@ game(P1, P2) :-
     assert(next_turn(P2)),
     
     change_state(turn), !.
-        
+
+% This predicate determines the winner of the game and displays the results.        
 game_over(Winner) :-
     setof([P, Points], player( P, Points), Result),
 
     nth1(1, Result, [P1, Points1]),
     nth1(2, Result, [P2, Points2]),
 
+    % If the first player has more points than the second player, P1 is the winner.
     (   Points1 > Points2
     ->  Winner = P1,
         display_winner(P1, Points1, fail)
     ; true
     ),
+    % If the second player has more points than the first player, P2 is the winner.
         (   Points1 < Points2
     ->  Winner = P2,
         display_winner(P2, Points2, fail)
     ; true
     ),
+    % If both players have the same number of points, the game is a tie.
         (   Points1 == Points2
     ->  Winner = 'BOTH',
         display_winner(P1, Points1, true)
     ; true
     ),
-    
+    % Return to the main menu.
     change_state(menu), !.
 
 
