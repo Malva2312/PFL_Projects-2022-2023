@@ -30,9 +30,13 @@ range(Start, End, Step, L) :-
     ;   S1 is Step * (-1)
     ),
     range_(Start, End, S1, L, []).
-    
+
+% This predicate generates a list of integers in a given range, with a given step between each integer.
 range_(Int, End, Step, L, Acc) :-
+    % Calculate the next integer in the range.
     Next is Int + Step, 
+
+    % If the next integer is less than or equal to the ending integer, add it to the list and generate the rest of the list. Otherwise, return the list.
     (   Next =< End
     ->  range_(Next, End, Step, L, [Int|Acc])
     ;   L = [Int|Acc]

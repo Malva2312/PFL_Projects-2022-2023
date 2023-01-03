@@ -30,11 +30,16 @@ add_points(Player, Points) :-
     retract(player(Player, _ )),
     assert(player(Player, New)).
 
+% This predicate changes the type of the CPU player.
 change_cpu :-
+    % Retrieve the current CPU player type.
     cpu(Old),
+    
+    % If the current CPU player type is 'Random', change it to 'Smart'. Otherwise, change it to 'Random'.
     (   Old == 'Random'
     ->  New = 'Smart'
     ;   New = 'Random'),
 
+    % Retract the current CPU player type and assert the new CPU player type.
     retractall(cpu(_)),
     assert(cpu(New)).

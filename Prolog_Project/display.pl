@@ -20,11 +20,7 @@ print_table([Row|Rest], Counter) :-
    C1 is Counter +1,
    print_table(Rest, C1).
 
-<<<<<<< HEAD
-%
-=======
 % numeric_header(+Header)
->>>>>>> refs/remotes/origin/main
 numeric_header([]).
 numeric_header([Elem | Tail]) :-
    format('~d  ', [Elem]),

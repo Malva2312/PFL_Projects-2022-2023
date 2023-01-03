@@ -8,7 +8,7 @@ board_size(9).
 stone_value('X').
 free_space('X').
 
-%
+% This predicate changes the size of the board from 9x9 to 6x6 or vice versa.
 change_board_size :-
     board_size(Old),
     (   Old == 9
@@ -39,7 +39,7 @@ new_board(SideSize, Board) :-
     free_space(FreeSpot),
     create_board(SideSize, SideSize, FreeSpot, Board).
 
-%
+% This predicate loads a new board into the database.
 load_board :-
 
     board_size(SideSize),
@@ -84,9 +84,10 @@ full([Row | Rest]) :-
     row_full(Row),
     full(Rest).
 
-
+% This predicate checks if the board is full. The board is considered full if all of its cells are occupied by pieces.
 board_full :-
     board(Board),
+    % Check if the board is full.
     full(Board).
 
 % count_x (+List, +X, -Count)
