@@ -1,6 +1,7 @@
 % between(+N, +Min, +Max)
 between(N, Min, Max) :-
     N >= Min, N =< Max.
+
 % points(+InARow, -Points)
 points(InARow, Points) :-
     (InARow == 3 ; InARow == 6 ; InARow == 9 ) -> Points is InARow // 3 ;
@@ -42,11 +43,11 @@ range_(Int, End, Step, L, Acc) :-
     ;   L = [Int|Acc]
     ).
 
-% count_x (+List, +X, -Count)
+% count_x (+List, +X, -Count).
 count_x(List, X, Count) :-
     count_x(List, X, 0, Count).
 
-% count_x (+List, +X, +Acc, -Count)
+% count_x (+List, +X, +Acc, -Count).
 count_x([], _, Acc, Acc).
 count_x([H|T], X, Acc, Count) :-
     (   
@@ -54,14 +55,3 @@ count_x([H|T], X, Acc, Count) :-
             Acc1 is Acc
     ),
     count_x(T, X, Acc1, Count).
-
-% idx(ELEMENT, LIST, INDEX) is true if INDEX is the index of ELEMENT in LIST.
-% The first element of the list has index 0.
-% idx(ELEMENT, LIST, INDEX) is true if ELEMENT is in the tail of the list and INDEX is the index of ELEMENT in the tail.
-idx(E,[E|_],0).
-idx(E,[_|T],Res) :-
-    % Find the index of ELEMENT in the tail.
-    idx(E,T,Cur_rest),
-
-    % Adjust the index to account for the elements that were skipped.
-    Res is Cur_rest + 1.

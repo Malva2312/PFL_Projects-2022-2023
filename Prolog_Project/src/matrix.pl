@@ -2,14 +2,14 @@
 
 :- include('utils.pl').
 
-% matrix_bounds(+X, +Y, +Matrix)
+% matrix_bounds(+X, +Y, +Matrix).
 matrix_bounds(X, Y, Matrix) :-
     length(Matrix, Len),
 
     between(X, 1, Len),
     between(Y, 1, Len).
 
-% change_value(+X, +Y, +Elem, +Matrix, -NewMatrix)
+% change_value(+X, +Y, +Elem, +Matrix, -NewMatrix).
 change_value(X, Y, Elem, Matrix, NewMatrix) :-
 
     nth1(Y, Matrix, Row, Rest),
@@ -18,14 +18,14 @@ change_value(X, Y, Elem, Matrix, NewMatrix) :-
     nth1(X, NewRow, Elem, RowRest),
     nth1(Y, NewMatrix, NewRow , Rest).
 
-% select_col(+X, +Matrix, -Col)
+% select_col(+X, +Matrix, -Col).
 select_col( _, [], [] ).
 select_col(X, [MatrixHead | MatrixTail], [Head | Tail]) :-
     nth1(X, MatrixHead, Head),
     select_col(X, MatrixTail, Tail). 
 
 
-% diagonal_1_down(+X, +Y, +Matrix, -D1)
+% diagonal_1_down(+X, +Y, +Matrix, -D1).
 diagonal_1_down( X, Y, Matrix, D1) :-
     length(Matrix, Len),
     diagonal_1_down(X, Y, Matrix, Len, D1).

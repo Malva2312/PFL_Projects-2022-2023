@@ -1,16 +1,16 @@
 :- include('utils.pl').
 
-%print_row(+Row, +NumColumns)
+%print_row(+Row, +NumColumns).
 print_row([], _).
 print_row([Col|Rest], NumColumns) :-
    format('~w  ', [Col]),
    print_row(Rest, NumColumns).
 
-%print_table(+Matrix)
+%print_table(+Matrix).
 print_table(Matrix) :-
    print_table(Matrix, 1).
 
-%print_table(+Matrix, +Counter)
+%print_table(+Matrix, +Counter).
 print_table([], _ ).
 print_table([Row|Rest], Counter) :-
    length(Row, NumColumns),
@@ -20,19 +20,19 @@ print_table([Row|Rest], Counter) :-
    C1 is Counter +1,
    print_table(Rest, C1).
 
-% numeric_header(+Header)
+% numeric_header(+Header).
 numeric_header([]).
 numeric_header([Elem | Tail]) :-
    format('~d  ', [Elem]),
    numeric_header(Tail).
 
-% stuff_header(+Header)
+% stuff_header(+Header).
 stuff_header([]).
 stuff_header([ _ | Tail]) :-
    write('---'),
    stuff_header(Tail).
 
-% header(+P1, +P2, +P1_Points, +P2_Points, +Size)
+% header(+P1, +P2, +P1_Points, +P2_Points, +Size).
 header(P1, P2, P1_Points, P2_Points, Size) :-
    format('\n\n\tSCORE\n  Player ~w: ~d\tPlayer ~w: ~d\n\n', [P1, P1_Points, P2, P2_Points]),
 
@@ -43,7 +43,7 @@ header(P1, P2, P1_Points, P2_Points, Size) :-
    write('--+--'), 
    stuff_header(Header), nl.
 
-% display_game_board(+P1, +P2, +P1_Points, +P2_Points, +Matrix)
+% display_game_board(+P1, +P2, +P1_Points, +P2_Points, +Matrix).
 display_game_board(P1, P2, P1_Points, P2_Points, Matrix) :-
    !,
    length(Matrix, Size),
@@ -51,11 +51,11 @@ display_game_board(P1, P2, P1_Points, P2_Points, Matrix) :-
    
    print_table(Matrix).
 
-% winner_msg(+P, +Points)
+% winner_msg(+P, +Points).
 winner_msg(P, Points) :-
    format('\n\n\tPlayer ~w WON THIS MATCH : ~d POINTS\n\n', [P, Points]).
 
-% display_winner(+P, +Points, Draw)
+% display_winner(+P, +Points, +Draw).
 display_winner(P, Points, DRAW) :-
    (  DRAW
    -> format('\n\n\tDRAW, BOTH PLAYERS SCORED ~d POINTS\n\n', [Points])
@@ -75,6 +75,7 @@ display_authors :-
    write('Created by : Paul Townsend, 1995\n'),
    write('Implemented in PROLOG by: Joao Malva && Joao Felix , 2023\n\n\n').
 
+%display_rules(+Size)
 display_rules(Size) :-
    
    format('O 369 joga-se em um tabuleiro ~dx~d.\n',[Size, Size] ),
@@ -95,6 +96,7 @@ display_game_menu :-
    write('4 -> CPU Vs Player\n'),
    write('0 -> Return\n').
 
+% display_settings(+Size, +CPU)
 display_settings(Size, CPU) :-
    write('\n  SETTINGS\n'),
    format('1 -> Change Board (6x6 or 9x9)\t\t\tBoard\t:\t~dx~d\n', [Size, Size]),

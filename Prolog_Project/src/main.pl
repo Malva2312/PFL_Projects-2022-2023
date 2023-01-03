@@ -94,6 +94,7 @@ switch_turn :-
 
 
 % This predicate prompts the user for a move or selects a move for the CPU.
+% choose_move(+Player).
 choose_move(Player, X, Y, Size) :-
     (   integer(Player)
     % If Player is an integer, prompt the user for a move using read_coords
@@ -129,6 +130,7 @@ turn :-
 
 
 % This predicate starts the game. The game consists of loading the board, loading the players, displaying the game board, and switching to the turn state.
+% game(+P1, +P2).
 game(P1, P2) :- 
     load_board, 
     load_players(P1, P2),
@@ -145,6 +147,7 @@ game(P1, P2) :-
     change_state(turn), !.
 
 % This predicate determines the winner of the game and displays the results.        
+% game_over(-Winner).
 game_over(Winner) :-
     setof([P, Points], player( P, Points), Result),
 

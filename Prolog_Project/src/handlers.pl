@@ -3,11 +3,13 @@
 initial_state(menu).
 
 % This predicate changes the current state of the game.
+% change_state(NewState).
 change_state(NewState) :-
     retractall(state(_)),
     assert(state(NewState)).
 
 % This predicate handles the users choice from the main menu.
+% menu_handler(+Choice).
 menu_handler(Choice) :-
     (   Choice == 1
     ->  change_state(game_menu)
@@ -25,6 +27,7 @@ menu_handler(Choice) :-
     -> change_state(exit)).
 
 % This predicate handles the users choice from the game menu.
+% game_menu_handler(+Choice).
 game_menu_handler(Choice) :-
     (   Choice == 1
     ->  change_state(game(1, 2))
@@ -40,7 +43,9 @@ game_menu_handler(Choice) :-
     );
     (   Choice == 0
     -> change_state(menu)).
+
 % This predicate handles the users choice from the settings menu.
+% settings_handler(+Choice).
 settings_handler(Choice) :-
     (   Choice == 0
     ->  change_state(menu)
@@ -53,6 +58,7 @@ settings_handler(Choice) :-
     ),
     !.
 % This predicate handles the users choice from the rules menu.
+% rules_handler(+Choice).
 rules_handler(Choice) :-
     (   Choice == 0
     ->  change_state(menu)
