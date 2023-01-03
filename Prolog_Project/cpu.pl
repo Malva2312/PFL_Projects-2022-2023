@@ -4,7 +4,6 @@
 :- include('board.pl').
 
 :- dynamic cpu/1.
-:- dynamic thinking_board/1.
 
 cpu('Random').
 
@@ -14,7 +13,7 @@ cpu('Random').
 cpu_move(X, Y) :-
     cpu(CPU),
     bagof([X, Y], valid_move(X, Y), VALID_MOVES),
-    random_permutation(VALID_MOVES, Random).
+    random_permutation(VALID_MOVES, Random),
     (   CPU == 'Random'
     ->  random_approach(X, Y, Random), !
     ;   true),

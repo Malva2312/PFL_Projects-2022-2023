@@ -93,7 +93,6 @@ display_game_menu :-
    write('2 -> Player  Vs CPU\n'),
    write('3 -> CPU Vs CPU\n'),
    write('4 -> CPU Vs Player\n'),
-   write('5 -> CPU Random Vs CPU Greedy\n'),
    write('0 -> Return\n').
 
 display_settings(Size, CPU) :-

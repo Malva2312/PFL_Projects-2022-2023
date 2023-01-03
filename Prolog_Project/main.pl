@@ -14,7 +14,7 @@
 
 menu_options(0, 3). %menu_options(Min, Max).
 rules_options(0, 1).
-game_menu_options(0, 3).
+game_menu_options(0, 4).
 settings_options(0, 2).
 
 request('Choose Option\n').
