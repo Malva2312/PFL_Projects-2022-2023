@@ -38,7 +38,24 @@ range_(Int, End, Step, L, Acc) :-
 
     % If the next integer is less than or equal to the ending integer, add it to the list and generate the rest of the list. Otherwise, return the list.
     (   Next =< End
-    ->  range_(Next, End, Step, L, [Int|Acc])
+    ->  !, range_(Next, End, Step, L, [Int|Acc])
     ;   L = [Int|Acc]
     ).
 
+% count_x (+List, +X, -Count)
+count_x(List, X, Count) :-
+    count_x(List, X, 0, Count).
+
+% count_x (+List, +X, +Acc, -Count)
+count_x([], _, Acc, Acc).
+count_x([H|T], X, Acc, Count) :-
+    (   
+        H = X ->  Acc1 is Acc + 1;
+            Acc1 is Acc
+    ),
+    count_x(T, X, Acc1, Count).
+
+idx(E,[E|_],0).
+idx(E,[_|T],Res) :-
+    idx(E,T,Cur_rest),
+    Res is Cur_rest + 1.

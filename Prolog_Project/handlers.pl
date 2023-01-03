@@ -1,3 +1,7 @@
+:- dynamic state/1.
+
+initial_state(menu).
+
 % This predicate changes the current state of the game.
 change_state(NewState) :-
     retractall(state(_)),
@@ -43,7 +47,8 @@ settings_handler(Choice) :-
     );
     (   Choice == 2
     ->  change_cpu, change_state(settings)
-    ).
+    ),
+    !.
 % This predicate handles the users choice from the rules menu.
 rules_handler(Choice) :-
     (   Choice == 0

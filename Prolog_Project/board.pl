@@ -13,8 +13,8 @@ free_space('_').
 change_board_size :-
     board_size(Old),
     (   Old == 9
-    ->  New is 6
-    ;   New is 9),
+    ->  New = 6
+    ;   New = 9),
 
     retractall(board_size( _ )),
     assert(board_size(New)).
@@ -92,23 +92,12 @@ full([Row | Rest]) :-
 
 % This predicate checks if the board is full. The board is considered full if all of its cells are occupied by pieces.
 board_full :-
+    \+ bagof([X, Y], valid_move(X, Y), Len).
+/*
     board(Board),
     % Check if the board is full.
     full(Board).
-
-% count_x (+List, +X, -Count)
-count_x(List, X, Count) :-
-    count_x(List, X, 0, Count).
-
-% count_x (+List, +X, +Acc, -Count)
-count_x([], _, Acc, Acc).
-count_x([H|T], X, Acc, Count) :-
-    (   
-        H = X ->  Acc1 is Acc + 1;
-            Acc1 is Acc
-    ),
-    count_x(T, X, Acc1, Count).
-
+*/
 % stones_horizontal(+Y, -N_Stone)
 stones_horizontal(Y, N_Stone) :-
     board(Board),

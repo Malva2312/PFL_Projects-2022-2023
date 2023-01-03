@@ -73,7 +73,7 @@ display_menu :-
    
 display_authors :-
    write('Created by : Paul Townsend, 1995\n'),
-   write('Implemented in PROLOG by: Joao Malva && Joao Felix , 2023\n').
+   write('Implemented in PROLOG by: Joao Malva && Joao Felix , 2023\n\n\n').
 
 display_rules(Size) :-
    
@@ -92,11 +92,13 @@ display_game_menu :-
    write('1 -> Player1 Vs Player2\n'),
    write('2 -> Player  Vs CPU\n'),
    write('3 -> CPU Vs CPU\n'),
+   write('4 -> CPU Vs Player\n'),
+   write('5 -> CPU Random Vs CPU Greedy\n'),
    write('0 -> Return\n').
 
 display_settings(Size, CPU) :-
    write('\n  SETTINGS\n'),
    format('1 -> Change Board (6x6 or 9x9)\t\t\tBoard\t:\t~dx~d\n', [Size, Size]),
-   format('2 -> Change CPU Tatics (Random or Smart)\tCPU\t:\t~w\n', [CPU]),
+   format('2 -> Change CPU Tatics (Random or Greedy)\tCPU\t:\t~w\n', [CPU]),
    write('0 -> Return'), nl.
 

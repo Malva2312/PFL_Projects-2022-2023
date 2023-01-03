@@ -1,6 +1,6 @@
-:- include('utils.pl').
-
 :- use_module(library(lists)).
+
+:- include('utils.pl').
 
 % matrix_bounds(+X, +Y, +Matrix)
 matrix_bounds(X, Y, Matrix) :-

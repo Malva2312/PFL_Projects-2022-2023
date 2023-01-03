@@ -1,9 +1,5 @@
-:- use_module(library(random)).
-
 :- dynamic player/2.
-:- dynamic cpu/1.
 
-cpu('Random').
 
 start_points(0).
 
@@ -19,7 +15,6 @@ load_players(P1, P2) :-
     load_player(P1),
     load_player(P2).
 
-
 % add_points(+Player, +Points)
 add_points(Player, Points) :-
 
@@ -33,21 +28,3 @@ add_points(Player, Points) :-
 value(Player, Points):-
     % Retrieve the number of points for the given player.
     player(Player, Points).
-
-% This predicate changes the type of the CPU player.
-change_cpu :-
-    % Retrieve the current CPU player type.
-    cpu(Old),
-
-    % If the current CPU player type is 'Random', change it to 'Smart'. Otherwise, change it to 'Random'.
-    (   Old == 'Random'
-    ->  New = 'Smart'
-    ;   New = 'Random'),
-
-    % Retract the current CPU player type and assert the new CPU player type.
-    retractall(cpu(_)),
-    assert(cpu(New)).
-%
-random_approach(X, Y, VALID_MOVES):-
-    random_member([X, Y], VALID_MOVES),
-    format('\n\n\n\tCPU CHOICE\nColomn : ~d\tRow : ~d\n', [X, Y]).

@@ -1,15 +1,16 @@
-:- include('board.pl').
+:- use_module(library(lists)).
+
 :- include('player.pl').
 :- include('input.pl').
 :- include('display.pl').
 :- include('utils.pl').
 :- include('handlers.pl').
+:- include('cpu.pl').
 
-:- dynamic state/1.
+
 :- dynamic who_turn/1.
 :- dynamic next_turn/1.
 
-initial_state(menu).
 
 menu_options(0, 3). %menu_options(Min, Max).
 rules_options(0, 1).
@@ -21,6 +22,7 @@ request('Choose Option\n').
 
 % This predicate displays the main menu of the game and handles user input. The menu consists of a list of options and a prompt for the user to enter their choice. The users choice is then passed to the menu_handler predicate for further processing.
 menu :-
+    !, 
     display_menu,
     menu_options(Min, Max),
     request(Request),
@@ -29,6 +31,7 @@ menu :-
 
 % This predicate displays the game menu and handles user input. The menu consists of a list of options and a prompt for the user to enter their choice. The users choice is then passed to the game_menu_handler predicate for further processing.
 game_menu :-
+    !,
     display_game_menu,
     game_menu_options(Min, Max),
     request(Request),
@@ -37,17 +40,20 @@ game_menu :-
 
 % This predicate displays the current settings and handles user input. The settings consist of the board size and the CPU player setting. The user is presented with a list of options and a prompt to enter their choice. The users choice is then passed to the settings_handler predicate for further processing.
 settings :-
+    !,
     board_size(Size),
     cpu(CPU),
     display_settings(Size, CPU),
     settings_options(Min, Max),
     request(Request),
     read_integer(Choice, Min, Max, Request), nl,
-    settings_handler(Choice).
+    settings_handler(Choice)
+    .
 
 % This predicate displays the rules of the game and handles user input. The rules consist of the board size and the rules for winning the game. The user is presented with a list of options and a prompt to enter their choice. The users choice is then passed to the rules_handler predicate for further processing.
 rules :-
     board_size(Size),
+    !,
     display_rules(Size),
     rules_options(Min, Max),
     request(Request),
@@ -84,10 +90,8 @@ switch_turn :-
 
     assert(who_turn(P2)),
     assert(next_turn(P1)).
-    
-cpu_move(X, Y) :-
-    setof([X, Y], valid_move(X, Y), VALIDE_MOVES),
-    random_approach(X, Y, VALIDE_MOVES).
+
+
 
 % This predicate prompts the user for a move or selects a move for the CPU.
 choose_move(Player, X, Y, Size) :-
@@ -96,12 +100,13 @@ choose_move(Player, X, Y, Size) :-
     ->  format('\n\tPlayer ~d\n', [Player]),
         read_coords(X, Y, 1, Size)
         % If Player is 'CPU', select a move for the CPU using cpu_move
-    ;   cpu_move(X, Y)
+    ;   !, cpu_move(X, Y)
     ).
     
 
 % This predicate represents a players turn in the game. The players turn consists of making a move on the game board and switching to the next player.
 turn :-
+
     who_turn(Player), 
     board_size(Size),
     repeat,
@@ -115,7 +120,7 @@ turn :-
             nl, 
             fail
         ),
-
+    
     display_game,
     !,
     (   board_full
