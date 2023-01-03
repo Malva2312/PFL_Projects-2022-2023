@@ -8,7 +8,9 @@ load_player(Player):-
     start_points(Points),
     assertz(player(Player, Points)).
 
-%
+% The load_players predicate loads the players P1 and P2 into the program.
+% It first removes any previously loaded players using the retractall/1 predicate,
+% then loads each player using the load_player predicate.
 load_players(P1, P2) :-
     retractall(player( _ , _ )),
 

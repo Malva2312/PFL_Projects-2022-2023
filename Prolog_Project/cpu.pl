@@ -8,6 +8,9 @@
 
 cpu('Random').
 
+
+% The cpu_move predicate selects a random valid move for the CPU player. 
+% A valid move is one that satisfies the valid_move predicate.
 cpu_move(X, Y) :-
     cpu(CPU),
     bagof([X, Y], valid_move(X, Y), VALID_MOVES),
@@ -23,22 +26,27 @@ cpu_move(X, Y) :-
     format('\n\n\n\tCPU CHOICE\nColomn : ~w\tRow : ~w\n', [X, Y]).
 
 
+
+
 % This predicate changes the type of the CPU player.
 change_cpu :-
     % Retrieve the current CPU player type.
     cpu(Old),
 
-    % If the current CPU player type is 'Random', change it to 'Greedy'. Otherwise, change it to 'Random'.
+    % If the current CPU player type is 'Random', change it to 'Smart'. Otherwise, change it to 'Random'.
     (   Old == 'Random'
-    ->  New = 'Greedy'
+    ->  New = 'Smart'
     ;   New = 'Random'),
 
     % Retract the current CPU player type and assert the new CPU player type.
     retractall(cpu(_)),
     assert(cpu(New)).
-%
+% The random_approach predicate selects a random valid move for the CPU player
+% from the list of valid moves stored in the VALID_MOVES variable.
+% The selected move is output using the format predicate.
 random_approach(X, Y, VALID_MOVES):-
-    random_member([X, Y], VALID_MOVES).
+    random_member([X, Y], VALID_MOVES),
+    format('\n\n\n\tCPU CHOICE\nColomn : ~d\tRow : ~d\n', [X, Y]).
 
 greedy_approach(X, Y, VALID_MOVES):-
    
