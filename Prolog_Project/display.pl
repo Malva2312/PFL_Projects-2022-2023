@@ -34,7 +34,7 @@ stuff_header([ _ | Tail]) :-
 
 % header(+P1, +P2, +P1_Points, +P2_Points, +Size)
 header(P1, P2, P1_Points, P2_Points, Size) :-
-   format('\n\n  Player ~w: ~d\tPlayer ~w: ~d\n\n', [P1, P1_Points, P2, P2_Points]),
+   format('\n\n\tSCORE\n  Player ~w: ~d\tPlayer ~w: ~d\n\n', [P1, P1_Points, P2, P2_Points]),
 
    write('  |  '),
    range(1, Size, 1, ReverseHeader),
@@ -53,7 +53,7 @@ display_game_board(P1, P2, P1_Points, P2_Points, Matrix) :-
 
 % winner_msg(+P, +Points)
 winner_msg(P, Points) :-
-   format('\n\n\tPlayer ~d WON THIS MATCH : ~d POINTS\n\n', [P, Points]).
+   format('\n\n\tPlayer ~w WON THIS MATCH : ~d POINTS\n\n', [P, Points]).
 
 % display_winner(+P, +Points, Draw)
 display_winner(P, Points, DRAW) :-
@@ -91,6 +91,7 @@ display_game_menu :-
    write('\n  GAME ON \n'),
    write('1 -> Player1 Vs Player2\n'),
    write('2 -> Player  Vs CPU\n'),
+   write('3 -> CPU Vs CPU\n'),
    write('0 -> Return\n').
 
 display_settings(Size, CPU) :-

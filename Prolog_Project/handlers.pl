@@ -28,6 +28,9 @@ game_menu_handler(Choice) :-
     (   Choice == 2
     ->  change_state(game(1, 'CPU'))
     );
+    (   Choice == 3
+    ->  change_state(game('CPU_1', 'CPU_2'))
+    );
     (   Choice == 0
     -> change_state(menu)).
 % This predicate handles the users choice from the settings menu.

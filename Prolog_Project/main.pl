@@ -13,7 +13,7 @@ initial_state(menu).
 
 menu_options(0, 3). %menu_options(Min, Max).
 rules_options(0, 1).
-game_menu_options(0, 2).
+game_menu_options(0, 3).
 settings_options(0, 2).
 
 request('Choose Option\n').
@@ -84,10 +84,14 @@ switch_turn :-
 
     assert(who_turn(P2)),
     assert(next_turn(P1)).
-    
+
+cpu_move(X, Y) :-
+    setof([X, Y], valid_move(X, Y), VALIDE_MOVES),
+    random_approach(X, Y, VALIDE_MOVES).
+
 choose_move(Player, X, Y, Size) :-
     (   integer(Player)
-    ->  format('\tPlayer ~d\n', [Player]),
+    ->  format('\n\tPlayer ~d\n', [Player]),
         read_coords(X, Y, 1, Size)
     ;   cpu_move(X, Y)
     ).
@@ -139,12 +143,12 @@ game_over(Winner) :-
     nth1(2, Result, [P2, Points2]),
 
     (   Points1 > Points2
-    ->  Winner is P1,
+    ->  Winner = P1,
         display_winner(P1, Points1, fail)
     ; true
     ),
         (   Points1 < Points2
-    ->  Winner is P2,
+    ->  Winner = P2,
         display_winner(P2, Points2, fail)
     ; true
     ),

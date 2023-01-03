@@ -1,9 +1,8 @@
+:- use_module(library(random)).
+
 :- dynamic player/2.
 :- dynamic cpu/1.
 
-player_1(1).
-player_2(2).
-player_cpu('CPU').
 cpu('Random').
 
 start_points(0).
@@ -46,4 +45,7 @@ change_cpu :-
     % Retract the current CPU player type and assert the new CPU player type.
     retractall(cpu(_)),
     assert(cpu(New)).
-    
+%
+random_approach(X, Y, VALID_MOVES):-
+    random_member([X, Y], VALID_MOVES),
+    format('\n\n\n\tCPU CHOICE\nColomn : ~d\tRow : ~d\n', [X, Y]).
