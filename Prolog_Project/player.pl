@@ -34,7 +34,7 @@ add_points(Player, Points) :-
 change_cpu :-
     % Retrieve the current CPU player type.
     cpu(Old),
-    
+
     % If the current CPU player type is 'Random', change it to 'Smart'. Otherwise, change it to 'Random'.
     (   Old == 'Random'
     ->  New = 'Smart'
@@ -43,3 +43,4 @@ change_cpu :-
     % Retract the current CPU player type and assert the new CPU player type.
     retractall(cpu(_)),
     assert(cpu(New)).
+    
