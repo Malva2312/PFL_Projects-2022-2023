@@ -30,6 +30,9 @@ add_points(Player, Points) :-
     retract(player(Player, _ )),
     assert(player(Player, New)).
 
+value(Player, Points):-
+    player(Player, Points).
+
 change_cpu :-
     cpu(Old),
     (   Old == 'Random'

@@ -73,7 +73,7 @@ diagonal_2_down(X, Y, Matrix, D_DOWN) :-
 
 % diagonal_2_down(+X, +Y, +Matrix, +Len, -D2)
 diagonal_2_down( _ , Len , _ , Len, []) :- !.
-diagonal_2_down( 1 , Y , Matrix, Len, []):- !.
+diagonal_2_down( 1 , _ , _ , _ , []):- !.
 diagonal_2_down(X , Y, Matrix, Len, [Elem | Tail]) :-
     X1 is X -1, Y1 is Y + 1,
 

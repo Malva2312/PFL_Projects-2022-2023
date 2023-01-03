@@ -1,8 +1,6 @@
 % between(+N, +Min, +Max)
 between(N, Min, Max) :-
-    N >= Min,
-    N =< Max.
-
+    N >= Min, N =< Max.
 % points(+InARow, -Points)
 points(InARow, Points) :-
     (InARow == 3 ; InARow == 6 ; InARow == 9 ) -> Points is InARow // 3 ;
@@ -29,9 +27,12 @@ range(Start, End, Step, L) :-
     ->  S1 is Step
     ;   S1 is Step * (-1)
     ),
+    !, 
     range_(Start, End, S1, L, []).
-    
+
+%
 range_(Int, End, Step, L, Acc) :-
+    !,
     Next is Int + Step, 
     (   Next =< End
     ->  range_(Next, End, Step, L, [Int|Acc])

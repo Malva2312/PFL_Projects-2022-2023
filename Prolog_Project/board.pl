@@ -2,11 +2,12 @@
 
 :- dynamic board/1.
 :- dynamic board_size/1.
+:- dynamic valid_move/2.
 
 board_size(9).
 
 stone_value('X').
-free_space('X').
+free_space('_').
 
 %
 change_board_size :-
@@ -45,11 +46,15 @@ load_board :-
     board_size(SideSize),
     new_board(SideSize, Board),
 
+    add_valid_moves(SideSize),
+
     retractall(board( _ )),
     assert(board(Board)).
 
 % spot_available(+X, +Y)
 spot_available(X, Y) :-
+    valid_move(X, Y).
+/*
     board(Board),
     free_space(FreeSpot),
 
@@ -59,7 +64,7 @@ spot_available(X, Y) :-
     nth1(X, Row, Element),
 
     Element == FreeSpot.
-
+*/
 % add_stone(+X, +Y)
 add_stone(X, Y) :-
     spot_available(X, Y),
@@ -68,6 +73,7 @@ add_stone(X, Y) :-
     stone_value(Stone), 
     
     change_value(X, Y, Stone, Board, NewBoard),
+    retract(valid_move(X, Y)),
     retract(board(Board)),
     assert(board(NewBoard)).
     
@@ -134,9 +140,23 @@ stones_diagonal_2(X, Y, N_Stone) :-
     diagonal_2(X, Y, Board, D2),
     count_x(D2, Stone, N_Stone).
 
-
+%
 stones_total(X, Y, V, H, D1, D2) :-
     stones_vertical(X, V),
     stones_horizontal(Y, H),
     stones_diagonal_1(X, Y, D1),
     stones_diagonal_2(X, Y, D2).
+
+list_pairs(List1, Pairs) :-
+    findall((X,Y), (member(X, List1), member(Y, List1)), Pairs).
+
+add_valid_move([]).
+add_valid_move([(X, Y) | Tail]) :-
+    assert(valid_move(X, Y)),
+    add_valid_move(Tail).
+
+add_valid_moves(Size) :-
+    retractall(valid_move(_, _)),
+    range(1, Size, 1, L1),
+    list_pairs(L1, Coordinates),
+    add_valid_move(Coordinates).
