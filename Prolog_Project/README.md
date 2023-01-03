@@ -20,6 +20,31 @@
 
 ## Lógica do jogo
 
+### Representação interna do estado do jogo
+
+O tabuleiro é representado a partir de uma lista com sublistas, sendo cada sublista uma linha do tabuleiro. Cada elemento duranto o jogo posiciona no tabuleiro a sua peça.
+O player tem dois estados possíveis, Player 1 e Player 2.
+Na representação gráfica do tabuleiro, as peças do Player 1 e do Player 2 não fazem distinção entre elas.
+
+### Visualização do estado do jogo
+
+Após iniciar o jogo, o jogador tem ao seu dispor um menu inicial com as opções do jogo.
+Para realizar a escolha de uma opção o jogador apenas escreve o número relativo à opção que quer. 
+As opções 'Rules' e 'Authors' apenas contêm texto sobre as suas secções.
+As primeiras 3 opções depois de ter selecionado 'Play', são respetivamente jogar Player vs Player, Player vs CPU ou CPU vs CPU.
+
+### Execução de jogadas
+
+### Lista de jogadas válidas
+
+### Final do jogo
+
+O jogo termina quando todas as opções onde se poderia colocar uma pedra ficam preenchidas e depois verifica se qual é o jogador ou CPU com mais pontos e assim determinamos o vencedor.
+
+### Avaliação do tabuleiro
+
+### Jogada do computador
+
 ## Conclusões
 
 ## Bibliografia
